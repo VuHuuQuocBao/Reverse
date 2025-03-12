@@ -31,7 +31,7 @@ namespace Core.Script
 
         public static void DefineTypeMethod(StreamWriter writer, string baseName, string className, string fieldList)
         {
-            writer.WriteLine("    class " + className + " : " + baseName);
+            writer.WriteLine("   public class " + className + " : " + baseName);
             writer.WriteLine("    {");
             // Constructor
             writer.WriteLine("        public " + className + "(" + fieldList + ")");

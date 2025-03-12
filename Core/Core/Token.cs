@@ -9,10 +9,10 @@ namespace Compiler.Core
 {
     public class Token
     {
-        private readonly TokenType _type;
-        private readonly string _lexeme;
-        private readonly Object _literal;
-        private readonly int _line;
+        public readonly TokenType _type;
+        public readonly string _lexeme;
+        public readonly Object _literal;
+        public readonly int _line;
         public Token(TokenType type, String lexeme, object literal, int line)
         {
             this._type = type;

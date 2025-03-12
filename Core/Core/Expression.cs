@@ -1,11 +1,15 @@
 ﻿using Compiler.Core;
+using Core.Core;
+
+
 namespace Compiler.Core
 {
-    abstract class Expression
+    abstract public class Expression
     {
+        public abstract T Accept<T>(IVisitor<T> visitor);
     }
 }
-class Binary : Expression
+public class Binary : Expression
 {
     public Binary(Expression left, Token @operator, Expression right)
     {
@@ -17,8 +21,10 @@ class Binary : Expression
     public readonly Expression left;
     public readonly Token @operator;
     public readonly Expression right;
+
+    public override T Accept<T>(IVisitor<T> visitor) => visitor.VisitBinaryExp(this);
 }
-class Grouping : Expression
+public class Grouping : Expression
 {
     public Grouping(Expression expression)
     {
@@ -26,8 +32,10 @@ class Grouping : Expression
     }
 
     public readonly Expression expression;
+
+    public override T Accept<T>(IVisitor<T> visitor) => visitor.VisitGroupingExp(this);
 }
-class Literal : Expression
+public class Literal : Expression
 {
     public Literal(Object value)
     {
@@ -35,8 +43,10 @@ class Literal : Expression
     }
 
     public readonly Object value;
+
+    public override T Accept<T>(IVisitor<T> visitor) => visitor.VisitLiteralExp(this);
 }
-class Unary : Expression
+public class Unary : Expression
 {
     public Unary(Token @operator, Expression right)
     {
@@ -46,4 +56,6 @@ class Unary : Expression
 
     public readonly Token @operator;
     public readonly Expression right;
+
+    public override T Accept<T>(IVisitor<T> visitor) => visitor.VisitUnaryExp(this);
 }
