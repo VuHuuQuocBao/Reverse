@@ -6,11 +6,11 @@ using Compiler.Enums;
 using Core.Core;
 using Core.Script;
 
-var path = @"D:\source.txt";
+var path = @"D:\source1.txt";
 var source = Extension.Scan(path);
 
 var scanner = new Scanner();
-scanner.ScanTokens(source);
+var tokens = scanner.ScanTokens(source);
 
 /*var generator = new AstTreeGenerator();
 generator.DefineAst("D:\\LastDance\\Reverse\\Core\\Core", "Expression", new List<string>()
@@ -31,7 +31,16 @@ Expression expression = new Binary(
             new Grouping(
                 new Literal(45.67)));
 
-System.Console.WriteLine(new AstPrinter().Print(expression));
+Console.WriteLine(new AstPrinter().Print(expression));
+
+#endregion
+
+#region Test parse single expression
+
+var parser = new Parser(tokens);
+Expression expressionParser = parser.Parse();
+
+Console.WriteLine(new AstPrinter().Print(expressionParser));
 
 var G = 1;
 
