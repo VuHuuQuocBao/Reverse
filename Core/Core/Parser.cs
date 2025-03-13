@@ -50,10 +50,7 @@ public class Parser
 
     #region Visitor Function
 
-    private Expression Expression()
-    {
-        return Equality();
-    }
+    private Expression Expression() => Equality();
 
     private Expression Equality()
     {
@@ -124,12 +121,14 @@ public class Parser
         {
             return new Literal(Previous()._literal);
         }
+
         if (Match(TokenType.LEFT_PAREN))
         {
             Expression expr = Expression();
             Consume(TokenType.RIGHT_PAREN, "Expect ')' after expression.");
             return new Grouping(expr);
         }
+
         return null; // Added a return statement to handle cases where none of the conditions are met
     }
 

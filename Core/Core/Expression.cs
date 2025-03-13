@@ -1,5 +1,5 @@
 ﻿using Compiler.Core;
-using Core.Core;
+using Core.Core.Visitor;
 
 
 namespace Compiler.Core

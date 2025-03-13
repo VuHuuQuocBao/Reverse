@@ -5,20 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Core
+namespace Core.Core.Visitor
 {
-    public interface IVisitor<R>
-    {
-        public R VisitBinaryExp(Binary exp);
-        public R VisitGroupingExp(Grouping exp);
-        public R VisitUnaryExp(Unary exp);
-        public R VisitLiteralExp(Literal exp);
-    }
-
     public class AstPrinter : IVisitor<string>
     {
         public string VisitBinaryExp(Binary exp) => Parenthesize(exp.@operator._lexeme, exp.left, exp.right);
-        public string VisitGroupingExp(Grouping exp) =>  Parenthesize("group", exp.expression);
+        public string VisitGroupingExp(Grouping exp) => Parenthesize("group", exp.expression);
 
         public string VisitLiteralExp(Literal exp)
         {
@@ -41,8 +33,6 @@ namespace Core.Core
             builder.Append(")");
             return builder.ToString();
         }
-        public String Print(Expression expr) => expr.Accept(this);
+        public string Print(Expression expr) => expr.Accept(this);
     }
 }
-
-

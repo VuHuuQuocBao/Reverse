@@ -1,12 +1,8 @@
-﻿
-// load the source 
-
-using Compiler.Core;
+﻿using Compiler.Core;
 using Compiler.Enums;
-using Core.Core;
-using Core.Script;
+using Core.Core.Visitor;
 
-var path = @"D:\source1.txt";
+var path = @"D:\source.txt";
 var source = Extension.Scan(path);
 
 var scanner = new Scanner();
@@ -42,6 +38,12 @@ Expression expressionParser = parser.Parse();
 
 Console.WriteLine(new AstPrinter().Print(expressionParser));
 
-var G = 1;
+#endregion
 
+#region Test interpret a single expression
+
+var interpreter = new Interpreter();
+var result = interpreter.Interpret(expressionParser);
+
+var G = 1;
 #endregion
