@@ -4,9 +4,9 @@ using Core.Core.Visitor;
 
 namespace Compiler.Core
 {
-    abstract public class Expression
+    public abstract class Expression
     {
-        public abstract T Accept<T>(IVisitor<T> visitor);
+        public abstract T Accept<T>(IExpressionVisitor<T> visitor);
     }
 }
 public class Binary : Expression
@@ -22,7 +22,7 @@ public class Binary : Expression
     public readonly Token @operator;
     public readonly Expression right;
 
-    public override T Accept<T>(IVisitor<T> visitor) => visitor.VisitBinaryExp(this);
+    public override T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitBinaryExp(this);
 }
 public class Grouping : Expression
 {
@@ -33,7 +33,7 @@ public class Grouping : Expression
 
     public readonly Expression expression;
 
-    public override T Accept<T>(IVisitor<T> visitor) => visitor.VisitGroupingExp(this);
+    public override T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitGroupingExp(this);
 }
 public class Literal : Expression
 {
@@ -44,7 +44,7 @@ public class Literal : Expression
 
     public readonly Object value;
 
-    public override T Accept<T>(IVisitor<T> visitor) => visitor.VisitLiteralExp(this);
+    public override T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitLiteralExp(this);
 }
 public class Unary : Expression
 {
@@ -57,5 +57,5 @@ public class Unary : Expression
     public readonly Token @operator;
     public readonly Expression right;
 
-    public override T Accept<T>(IVisitor<T> visitor) => visitor.VisitUnaryExp(this);
+    public override T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitUnaryExp(this);
 }

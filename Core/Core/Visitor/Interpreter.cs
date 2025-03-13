@@ -9,12 +9,37 @@ using System.Threading.Tasks;
 
 namespace Core.Core.Visitor
 {
-    public class Interpreter : IVisitor<object>
+    public class Interpreter : IExpressionVisitor<object>, IStatementVisitor<object>
     {
 
-        public object Interpret(Expression exp) => Evaluate(exp);
+        public object InterpretExpresion(Expression exp) => Evaluate(exp);
+
+        public void InterpretStatement(List<Statement> listStatement)
+        {
+            foreach (var statement in listStatement)
+                Execute(statement);
+        }
 
         #region Visitor function
+
+        #region Visit Statement
+        public object VisitPrintStatement(PrintStatement stmt)
+        {
+            var value = Evaluate(stmt.expression);
+            Console.WriteLine(value);
+            return null;
+        }
+
+        public object VisitExpressionStatement(ExpressionStatement stmt)
+        {
+            var value = Evaluate(stmt.expression);
+            Console.WriteLine(value);
+            return null;
+        }
+
+        #endregion
+
+        #region Visit Expression
         public object VisitBinaryExp(Binary exp)
         {
             object left = Evaluate(exp.left);
@@ -55,8 +80,12 @@ namespace Core.Core.Visitor
 
         #endregion
 
+        #endregion
+
         #region Helper method
         private Object Evaluate(Expression expr) => expr.Accept(this);
+
+        private void Execute(Statement stmt) => stmt.Accept(this);
         private bool IsTruthy(object obj)
         {
             if (obj == null) return false;

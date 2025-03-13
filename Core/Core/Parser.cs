@@ -1,5 +1,6 @@
 ﻿using Compiler.Core;
 using Compiler.Enums;
+using Core.Core;
 
 public class Parser
 {
@@ -50,6 +51,30 @@ public class Parser
 
     #region Visitor Function
 
+    #region Statement
+    private Statement Statement()
+    {
+        if (Match(TokenType.PRINT)) return PrintStatement();
+
+        return ExpressionStatement();
+    }
+
+    private Statement PrintStatement()
+    {
+        Expression value = Expression();
+        Consume(TokenType.SEMICOLON, "Expect ';' after value.");
+        return new PrintStatement(value);
+    }
+    private Statement ExpressionStatement()
+    {
+        Expression expr = Expression();
+        Consume(TokenType.SEMICOLON, "Expect ';' after value.");
+        return new ExpressionStatement(expr);
+    }
+
+    #endregion
+
+    #region Expression
     private Expression Expression() => Equality();
 
     private Expression Equality()
@@ -132,8 +157,19 @@ public class Parser
         return null; // Added a return statement to handle cases where none of the conditions are met
     }
 
+    #endregion
 
     #endregion
 
     public Expression Parse() => Expression();
+
+    public List<Statement> ParseStatement()
+    {
+        var statements = new List<Statement>();
+
+        while (!IsAtEnd())
+            statements.Add(Statement());
+
+        return statements;
+    }
 }

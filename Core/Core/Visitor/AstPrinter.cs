@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Core.Core.Visitor
 {
-    public class AstPrinter : IVisitor<string>
+    public class AstPrinter : IExpressionVisitor<string>
     {
         public string VisitBinaryExp(Binary exp) => Parenthesize(exp.@operator._lexeme, exp.left, exp.right);
         public string VisitGroupingExp(Grouping exp) => Parenthesize("group", exp.expression);
