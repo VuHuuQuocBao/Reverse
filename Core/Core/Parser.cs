@@ -1,5 +1,4 @@
-﻿using Core.Core;
-using Compiler.Enums;
+﻿using Compiler.Enums;
 
 namespace Core.Core
 {
