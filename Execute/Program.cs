@@ -21,7 +21,8 @@ generator.DefineAst(path1, "Expression", new List<string>()
      "Binary   : Expression left, Token @operator, Expression right",
      "Grouping : Expression expression",
      "Literal  : Object value",
-     "Unary    : Token @operator, Expression right"
+     "Unary    : Token @operator, Expression right",
+     "Variable : Token name"
 });
 
 #region Test print Ast tree

@@ -58,5 +58,14 @@ namespace Core.Core
 
         public override T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitUnaryExp(this);
     }
-}
+    public class Variable : Expression
+    {
+        public Variable(Token name)
+        {
+            this.name = name;
+        }
 
+        public readonly Token name;
+        public override T Accept<T>(IExpressionVisitor<T> visitor) => throw new NotImplementedException();
+    }
+}

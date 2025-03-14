@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core.Core.Visitor;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,16 +14,25 @@ namespace Core.Script
             string path = Path.Combine(outputDir, baseName + ".cs");
 
             // get all class from 
-            var listClassName = GetAllClassNameFromFile(path);
+            (var listClassName, var lines) = GetAllClassNameFromFile(path);
             
             using (StreamWriter writer = new StreamWriter(path, false, Encoding.UTF8))
             {
-                writer.WriteLine("using Core.Core;");
-                writer.WriteLine("namespace Core.Core");
-                writer.WriteLine("{");
-                writer.WriteLine("abstract class " + baseName);
-                writer.WriteLine("{");
-                writer.WriteLine("}");
+                if(lines is { Count : > 0})
+                {
+                    lines.RemoveAt(lines.Count - 1);
+                    foreach(var line in lines)
+                        writer.WriteLine(line);
+                }
+                else
+                {
+                    writer.WriteLine("namespace Core.Core");
+                    writer.WriteLine("{");
+                    writer.WriteLine("abstract class " + baseName);
+                    writer.WriteLine("{");
+                    writer.WriteLine("}");
+                    writer.WriteLine("using Core.Core;");
+                }
 
                 foreach (var type in types)
                 {
@@ -34,7 +44,7 @@ namespace Core.Script
                     string fields = type.Split(':')[1].Trim();
                     DefineTypeMethod(writer, baseName, className, fields);
                 }
-                writer.WriteLine("}");
+                writer.Write("}");
             }
         }
 
@@ -61,11 +71,12 @@ namespace Core.Script
             {
                 writer.WriteLine("        public readonly " + field + ";");
             }
+            writer.WriteLine("public override T Accept<T>(IExpressionVisitor<T> visitor) => throw new NotImplementedException();");
 
             writer.WriteLine("    }");
         }
 
-        public List<string> GetAllClassNameFromFile(string path)
+        public (List<string>, List<string>) GetAllClassNameFromFile(string path)
         {
             List<string> listClassName = new();
             var lines = File.ReadAllLines(path);
@@ -90,7 +101,7 @@ namespace Core.Script
                 }
             }
 
-            return listClassName;
+            return (listClassName, lines.ToList());
         }
     }
 }
