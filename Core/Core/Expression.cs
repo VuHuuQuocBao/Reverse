@@ -1,61 +1,62 @@
-﻿using Compiler.Core;
+﻿using Core.Core;
 using Core.Core.Visitor;
 
 
-namespace Compiler.Core
+namespace Core.Core
 {
     public abstract class Expression
     {
         public abstract T Accept<T>(IExpressionVisitor<T> visitor);
     }
-}
-public class Binary : Expression
-{
-    public Binary(Expression left, Token @operator, Expression right)
+    public class Binary : Expression
     {
-        this.left = left;
-        this.@operator = @operator;
-        this.right = right;
+        public Binary(Expression left, Token @operator, Expression right)
+        {
+            this.left = left;
+            this.@operator = @operator;
+            this.right = right;
+        }
+
+        public readonly Expression left;
+        public readonly Token @operator;
+        public readonly Expression right;
+
+        public override T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitBinaryExp(this);
     }
-
-    public readonly Expression left;
-    public readonly Token @operator;
-    public readonly Expression right;
-
-    public override T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitBinaryExp(this);
-}
-public class Grouping : Expression
-{
-    public Grouping(Expression expression)
+    public class Grouping : Expression
     {
-        this.expression = expression;
+        public Grouping(Expression expression)
+        {
+            this.expression = expression;
+        }
+
+        public readonly Expression expression;
+
+        public override T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitGroupingExp(this);
     }
-
-    public readonly Expression expression;
-
-    public override T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitGroupingExp(this);
-}
-public class Literal : Expression
-{
-    public Literal(Object value)
+    public class Literal : Expression
     {
-        this.value = value;
+        public Literal(Object value)
+        {
+            this.value = value;
+        }
+
+        public readonly Object value;
+
+        public override T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitLiteralExp(this);
     }
-
-    public readonly Object value;
-
-    public override T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitLiteralExp(this);
-}
-public class Unary : Expression
-{
-    public Unary(Token @operator, Expression right)
+    public class Unary : Expression
     {
-        this.@operator = @operator;
-        this.right = right;
+        public Unary(Token @operator, Expression right)
+        {
+            this.@operator = @operator;
+            this.right = right;
+        }
+
+        public readonly Token @operator;
+        public readonly Expression right;
+
+        public override T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitUnaryExp(this);
     }
-
-    public readonly Token @operator;
-    public readonly Expression right;
-
-    public override T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitUnaryExp(this);
 }
+

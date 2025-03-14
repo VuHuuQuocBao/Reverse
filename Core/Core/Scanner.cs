@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace Compiler.Core
+namespace Core.Core
 {
     public class Scanner
     {

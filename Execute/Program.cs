@@ -1,22 +1,28 @@
-﻿using Compiler.Core;
+﻿using Core.Core;
 using Compiler.Enums;
-using Core.Core;
 using Core.Core.Visitor;
+using Core.Script;
 
-var path = @"D:\LastDance\Reverse\Test\source.txt";
+//var path = @"D:\LastDance\Reverse\Test\source.txt";
+var path = @"D:\source.txt";
+
 var source = Extension.Scan(path);
 
 var scanner = new Scanner();
 var tokens = scanner.ScanTokens(source);
 
-/*var generator = new AstTreeGenerator();
-generator.DefineAst("D:\\LastDance\\Reverse\\Core\\Core", "Expression", new List<string>()
+var generator = new AstTreeGenerator();
+
+var path1 = @"D:\Interpreter\Reverse\Core\Core";
+//var path1 = @"D:\LastDance\Reverse\Core\Core";
+
+generator.DefineAst(path1, "Expression", new List<string>()
 {
      "Binary   : Expression left, Token @operator, Expression right",
      "Grouping : Expression expression",
      "Literal  : Object value",
      "Unary    : Token @operator, Expression right"
-});*/
+});
 
 #region Test print Ast tree
 
