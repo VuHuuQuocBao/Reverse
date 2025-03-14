@@ -11,7 +11,7 @@ namespace Core.Core.Visitor
 {
     public class Interpreter : IExpressionVisitor<object>, IStatementVisitor<object>
     {
-
+        private Environment environment = new Environment();
         public object InterpretExpresion(Expression exp) => Evaluate(exp);
 
         public void InterpretStatement(List<Statement> listStatement)
@@ -111,5 +111,16 @@ namespace Core.Core.Visitor
             };
 
         #endregion
+
+        public object VisitVarStatement(VarStatement stmt)
+        {
+            object value = null;
+            if (stmt.initializer != null)
+                value = Evaluate(stmt.initializer);
+
+            environment.Define(stmt.name._lexeme, value);
+            return null;
+        }
+
     }
 }

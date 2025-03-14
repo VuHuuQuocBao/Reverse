@@ -25,6 +25,11 @@ generator.DefineAst(path1, "Expression", new List<string>()
      "Variable : Token name"
 });
 
+generator.DefineAst(path1, "Statement", new List<string>()
+{
+     "Var : Token name, Expression initializer"
+});
+
 #region Test print Ast tree
 
 /*Expression expression = new Binary(

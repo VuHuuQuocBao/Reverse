@@ -71,7 +71,12 @@ namespace Core.Script
             {
                 writer.WriteLine("        public readonly " + field + ";");
             }
-            writer.WriteLine("public override T Accept<T>(IExpressionVisitor<T> visitor) => throw new NotImplementedException();");
+
+            (baseName switch
+            {
+                "Expression" => (Action)(() => writer.WriteLine("public override T Accept<T>(IExpressionVisitor<T> visitor) => throw new NotImplementedException();")),
+                "Statement" => (Action)(() => writer.WriteLine("public override T Accept<T>(IStatementVisitor<T> visitor) => throw new NotImplementedException();"))
+            })();
 
             writer.WriteLine("    }");
         }

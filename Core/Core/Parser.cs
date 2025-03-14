@@ -53,6 +53,24 @@ namespace Core.Core
         #region Visitor Function
 
         #region Statement
+
+        private Statement Declaration()
+        {
+            if (Match(TokenType.VAR)) return VarDeclaration();
+            return Statement();
+        }
+
+        private Statement VarDeclaration()
+        {
+            var name = Consume(TokenType.IDENTIFIER, "Expect variable name.");
+
+            Expression initializer = null;
+            if (Match(TokenType.EQUAL))
+                initializer = Expression();
+
+            Consume(TokenType.SEMICOLON, "Expect ';' after variable declaration.");
+            return new VarStatement(name, initializer);
+        }
         private Statement Statement()
         {
             if (Match(TokenType.PRINT)) return PrintStatement();
@@ -144,9 +162,10 @@ namespace Core.Core
             if (Match(TokenType.NIL)) return new Literal(null);
 
             if (Match(TokenType.NUMBER, TokenType.STRING))
-            {
                 return new Literal(Previous()._literal);
-            }
+
+            if (Match(TokenType.IDENTIFIER))
+                return new Variable(Previous());
 
             if (Match(TokenType.LEFT_PAREN))
             {
@@ -169,7 +188,7 @@ namespace Core.Core
             var statements = new List<Statement>();
 
             while (!IsAtEnd())
-                statements.Add(Statement());
+                statements.Add(Declaration());
 
             return statements;
         }

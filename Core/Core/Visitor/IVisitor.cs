@@ -19,6 +19,7 @@ namespace Core.Core.Visitor
     {
         public R VisitPrintStatement(PrintStatement stmt);
         public R VisitExpressionStatement(ExpressionStatement stmt);
+        public R VisitVarStatement(VarStatement stmt);
     }
 
 }
