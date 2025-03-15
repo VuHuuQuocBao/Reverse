@@ -42,16 +42,14 @@ namespace Core.Core
         public readonly Expression initializer;
         public override T Accept<T>(IStatementVisitor<T> visitor) => visitor.VisitVarStatement(this);
     }
-   public class Var : Statement
+    public class BlockStatement : Statement
     {
-        public Var(Token name, Expression initializer)
+        public BlockStatement(List<Statement> statements)
         {
-            this.name = name;
-            this.initializer = initializer;
+            this.statements = statements;
         }
 
-        public readonly Token name;
-        public readonly Expression initializer;
-public override T Accept<T>(IStatementVisitor<T> visitor) => throw new NotImplementedException();
+        public readonly List<Statement> statements;
+        public override T Accept<T>(IStatementVisitor<T> visitor) => visitor.VisitBlockStatement(this);
     }
 }

@@ -74,7 +74,20 @@ namespace Core.Core
         {
             if (Match(TokenType.PRINT)) return PrintStatement();
 
+            if (Match(TokenType.LEFT_BRACE)) return new BlockStatement(Block());
+
             return ExpressionStatement();
+        }
+
+        private List<Statement> Block()
+        {
+            List<Statement> statements = new List<Statement>();
+            while (!Check(TokenType.RIGHT_BRACE) && !IsAtEnd())
+            {
+                statements.Add(Declaration());
+            }
+            Consume(TokenType.RIGHT_BRACE, "Expect '}' after block.");
+            return statements;
         }
 
         private Statement PrintStatement()
@@ -93,18 +106,34 @@ namespace Core.Core
         #endregion
 
         #region Expression
+
+        private Expression assignment()
+        {
+            Expression expr = Equality();
+            if (Match(TokenType.EQUAL))
+            {
+                Token equals = Previous();
+                Expression value = assignment();
+                if (expr is Variable) {
+                    Token name = ((Variable)expr).name;
+                    return new Assign(name, value);
+                }
+                //error(equals, "Invalid assignment target.");
+            }
+            return expr;
+        }
         private Expression Expression() => Equality();
 
         private Expression Equality()
         {
-            Expression expr = Comparison();
+            Expression exp = Comparison();
             while (Match(TokenType.BANG_EQUAL, TokenType.EQUAL_EQUAL))
             {
                 Token @operator = Previous();
                 Expression right = Comparison();
-                expr = new Binary(expr, @operator, right);
+                exp = new Binary(exp, @operator, right);
             }
-            return expr;
+            return exp;
         }
 
         private Expression Comparison()

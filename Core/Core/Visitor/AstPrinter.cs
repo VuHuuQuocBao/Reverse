@@ -29,5 +29,7 @@ namespace Core.Core.Visitor
             return builder.ToString();
         }
         public string Print(Expression expr) => expr.Accept(this);
+        public string VisitVariableExp(Variable exp) => throw new NotImplementedException();
+        public string VisitAssignExpr(Assign exp) => throw new NotImplementedException();
     }
 }

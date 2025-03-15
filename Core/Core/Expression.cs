@@ -65,6 +65,18 @@ namespace Core.Core
         }
 
         public readonly Token name;
+        public override T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitVariableExp(this);
+    }
+    public class Assign : Expression
+    {
+        public Assign(Token name, Expression value)
+        {
+            this.name = name;
+            this.value = value;
+        }
+
+        public readonly Token name;
+        public readonly Expression value;
         public override T Accept<T>(IExpressionVisitor<T> visitor) => throw new NotImplementedException();
     }
 }

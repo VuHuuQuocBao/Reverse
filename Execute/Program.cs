@@ -2,8 +2,8 @@
 using Core.Core.Visitor;
 using Core.Script;
 
-//var path = @"D:\LastDance\Reverse\Test\source.txt";
-var path = @"D:\source.txt";
+var path = @"D:\LastDance\Reverse\Test\source.txt";
+//var path = @"D:\source.txt";
 
 var source = Extension.Scan(path);
 
@@ -12,8 +12,8 @@ var tokens = scanner.ScanTokens(source);
 
 var generator = new AstTreeGenerator();
 
-var path1 = @"D:\Interpreter\Reverse\Core\Core";
-//var path1 = @"D:\LastDance\Reverse\Core\Core";
+//var path1 = @"D:\Interpreter\Reverse\Core\Core";
+var path1 = @"D:\LastDance\Reverse\Core\Core";
 
 generator.DefineAst(path1, "Expression", new List<string>()
 {
@@ -21,12 +21,13 @@ generator.DefineAst(path1, "Expression", new List<string>()
      "Grouping : Expression expression",
      "Literal  : Object value",
      "Unary    : Token @operator, Expression right",
-     "Variable : Token name"
+     "Variable : Token name",
+     "Assign   : Token name, Expression value",
 });
 
 generator.DefineAst(path1, "Statement", new List<string>()
 {
-     "Var : Token name, Expression initializer"
+      "BlockStatement      : List<Statement> statements"
 });
 
 #region Test print Ast tree

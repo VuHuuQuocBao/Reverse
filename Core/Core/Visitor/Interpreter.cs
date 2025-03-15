@@ -16,6 +16,21 @@ namespace Core.Core.Visitor
         #region Visitor function
 
         #region Visit Statement
+        public object VisitBlockStatement(BlockStatement stmt)
+        {
+            ExecuteBlock(stmt.statements, new Environment(environment));
+            return null;
+        }
+
+        public object VisitVarStatement(VarStatement stmt)
+        {
+            object value = null;
+            if (stmt.initializer != null)
+                value = Evaluate(stmt.initializer);
+
+            environment.Define(stmt.name._lexeme, value);
+            return null;
+        }
         public object VisitPrintStatement(PrintStatement stmt)
         {
             var value = Evaluate(stmt.expression);
@@ -33,6 +48,13 @@ namespace Core.Core.Visitor
         #endregion
 
         #region Visit Expression
+        public object VisitAssignExpr(Assign exp)
+        {
+            Object value = Evaluate(exp.value);
+            environment.Assign(exp.name, value);
+            return value;
+        }
+        public object VisitVariableExp(Variable exp) => environment.Get(exp.name);
         public object VisitBinaryExp(Binary exp)
         {
             object left = Evaluate(exp.left);
@@ -76,8 +98,16 @@ namespace Core.Core.Visitor
         #endregion
 
         #region Helper method
-        private Object Evaluate(Expression expr) => expr.Accept(this);
+        private void ExecuteBlock(List<Statement> statements, Environment environment)
+        {
+            Environment previous = this.environment;
 
+            this.environment = environment;
+            foreach (Statement statement in statements)
+                Execute(statement);
+            this.environment = previous;
+        }
+        private Object Evaluate(Expression expr) => expr.Accept(this);
         private void Execute(Statement stmt) => stmt.Accept(this);
         private bool IsTruthy(object obj)
         {
@@ -104,16 +134,5 @@ namespace Core.Core.Visitor
             };
 
         #endregion
-
-        public object VisitVarStatement(VarStatement stmt)
-        {
-            object value = null;
-            if (stmt.initializer != null)
-                value = Evaluate(stmt.initializer);
-
-            environment.Define(stmt.name._lexeme, value);
-            return null;
-        }
-
     }
 }
