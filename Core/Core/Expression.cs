@@ -11,14 +11,14 @@ namespace Core.Core
     {
         public Binary(Expression left, Token @operator, Expression right)
         {
-            this.left = left;
-            this.@operator = @operator;
-            this.right = right;
+            this.Left = left;
+            this.@Operator = @operator;
+            this.Right = right;
         }
 
-        public readonly Expression left;
-        public readonly Token @operator;
-        public readonly Expression right;
+        public readonly Expression Left;
+        public readonly Token @Operator;
+        public readonly Expression Right;
 
         public override T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitBinaryExp(this);
     }
@@ -26,10 +26,10 @@ namespace Core.Core
     {
         public Grouping(Expression expression)
         {
-            this.expression = expression;
+            this.Expression = expression;
         }
 
-        public readonly Expression expression;
+        public readonly Expression Expression;
 
         public override T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitGroupingExp(this);
     }
@@ -37,10 +37,10 @@ namespace Core.Core
     {
         public Literal(Object value)
         {
-            this.value = value;
+            this.Value = value;
         }
 
-        public readonly Object value;
+        public readonly Object Value;
 
         public override T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitLiteralExp(this);
     }
@@ -48,12 +48,12 @@ namespace Core.Core
     {
         public Unary(Token @operator, Expression right)
         {
-            this.@operator = @operator;
-            this.right = right;
+            this.@Operator = @operator;
+            this.Right = right;
         }
 
-        public readonly Token @operator;
-        public readonly Expression right;
+        public readonly Token @Operator;
+        public readonly Expression Right;
 
         public override T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitUnaryExp(this);
     }
@@ -61,22 +61,36 @@ namespace Core.Core
     {
         public Variable(Token name)
         {
-            this.name = name;
+            this.Name = name;
         }
 
-        public readonly Token name;
+        public readonly Token Name;
         public override T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitVariableExp(this);
     }
     public class Assign : Expression
     {
         public Assign(Token name, Expression value)
         {
-            this.name = name;
-            this.value = value;
+            this.Name = name;
+            this.Value = value;
         }
 
-        public readonly Token name;
-        public readonly Expression value;
-        public override T Accept<T>(IExpressionVisitor<T> visitor) => throw new NotImplementedException();
+        public readonly Token Name;
+        public readonly Expression Value;
+        public override T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitAssignExpr(this);
+    }
+    public class Logical : Expression
+    {
+        public Logical(Expression Left, Token @Operator, Expression Right)
+        {
+            this.Left = Left;
+            this.@Operator = @Operator;
+            this.Right = Right;
+        }
+
+        public readonly Expression Left;
+        public readonly Token @Operator;
+        public readonly Expression Right;
+        public override T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitLogicalExpression(this);
     }
 }

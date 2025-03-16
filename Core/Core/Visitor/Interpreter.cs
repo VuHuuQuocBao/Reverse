@@ -16,51 +16,82 @@ namespace Core.Core.Visitor
         #region Visitor function
 
         #region Visit Statement
+        public object VisitWhileStatement(WhileStatement statement)
+        {
+            while (IsTruthy(Evaluate(statement.Condition)))
+                Execute(statement.Body);
+
+            return null;
+        }
+
+        public object VisitIfStatement(IfStatement statement)
+        {
+            if (IsTruthy(Evaluate(statement.Condition)))
+                Execute(statement.ThenBranch);
+            else if (statement.ElseBranch != null)
+                Execute(statement.ElseBranch);
+
+            return null;
+        }
+
         public object VisitBlockStatement(BlockStatement stmt)
         {
-            ExecuteBlock(stmt.statements, new Environment(environment));
+            ExecuteBlock(stmt.Statements, new Environment(environment));
             return null;
         }
 
         public object VisitVarStatement(VarStatement stmt)
         {
             object value = null;
-            if (stmt.initializer != null)
-                value = Evaluate(stmt.initializer);
+            if (stmt.Initializer != null)
+                value = Evaluate(stmt.Initializer);
 
-            environment.Define(stmt.name._lexeme, value);
+            environment.Define(stmt.Name._lexeme, value);
             return null;
         }
         public object VisitPrintStatement(PrintStatement stmt)
         {
-            var value = Evaluate(stmt.expression);
+            var value = Evaluate(stmt.Expression);
             Console.WriteLine(value);
             return null;
         }
 
         public object VisitExpressionStatement(ExpressionStatement stmt)
         {
-            var value = Evaluate(stmt.expression);
-            Console.WriteLine(value);
+            var value = Evaluate(stmt.Expression);
             return null;
         }
 
         #endregion
 
         #region Visit Expression
+        public object VisitLogicalExpression(Logical expression)
+        {
+            object left = Evaluate(expression.Left);
+
+            if (expression.@Operator._type is TokenType.OR)
+            {
+                if (IsTruthy(left)) return left;
+            }
+            else
+                if (!IsTruthy(left)) return left;
+
+            return Evaluate(expression.Right);
+        }
+
         public object VisitAssignExpr(Assign exp)
         {
-            Object value = Evaluate(exp.value);
-            environment.Assign(exp.name, value);
+            Object value = Evaluate(exp.Value);
+            environment.Assign(exp.Name, value);
             return value;
         }
-        public object VisitVariableExp(Variable exp) => environment.Get(exp.name);
+        public object VisitVariableExp(Variable exp) => environment.Get(exp.Name);
         public object VisitBinaryExp(Binary exp)
         {
-            object left = Evaluate(exp.left);
-            object right = Evaluate(exp.right);
+            object left = Evaluate(exp.Left);
+            object right = Evaluate(exp.Right);
 
-            var value = exp.@operator._type switch
+            var value = exp.@Operator._type switch
             {
                 TokenType.MINUS => (object)((double)left - (double)right),
                 TokenType.SLASH => (double)left / (double)right,
@@ -77,13 +108,13 @@ namespace Core.Core.Visitor
 
             return value;
         }
-        public object VisitGroupingExp(Grouping exp) => Evaluate(exp.expression);
-        public object VisitLiteralExp(Literal exp) => exp.value;
+        public object VisitGroupingExp(Grouping exp) => Evaluate(exp.Expression);
+        public object VisitLiteralExp(Literal exp) => exp.Value;
         public object VisitUnaryExp(Unary exp)
         {
-            object right = Evaluate(exp.right);
+            object right = Evaluate(exp.Right);
 
-            var value = exp.@operator._type switch
+            var value = exp.@Operator._type switch
             {
                 TokenType.MINUS => (object)-(double)right,
                 TokenType.BANG => !IsTruthy(right),
@@ -111,14 +142,14 @@ namespace Core.Core.Visitor
         private void Execute(Statement stmt) => stmt.Accept(this);
         private bool IsTruthy(object obj)
         {
-            if (obj == null) return false;
+            if (obj is null) return false;
             if (obj is bool) return (bool)obj;
             return true;
         }
         private bool IsEqual(object a, object b)
         {
-            if (a == null && b == null) return true;
-            if (a == null) return false;
+            if (a is null && b is null) return true;
+            if (a is null) return false;
             return a.Equals(b);
         }
 

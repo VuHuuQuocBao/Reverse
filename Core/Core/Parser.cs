@@ -52,6 +52,29 @@ namespace Core.Core
         #region Visitor Function
 
         #region Statement
+        private Statement WhileStatement()
+        {
+            Consume(TokenType.LEFT_PAREN, "Expect '(' after 'while'.");
+            Expression condition = Expression();
+            Consume(TokenType.RIGHT_PAREN, "Expect ')' after condition.");
+            Statement body = Statement();
+            return new WhileStatement(condition, body);
+        }
+
+        private Statement IfStatement()
+        {
+            Consume(TokenType.LEFT_PAREN, "Expect '(' after 'if'.");
+            Expression condition = Expression();
+            Consume(TokenType.RIGHT_PAREN, "Expect ')' after if condition.");
+
+            Statement thenBranch = Statement();
+            Statement elseBranch = null;
+
+            if (Match(TokenType.ELSE))
+                elseBranch = Statement();
+
+            return new IfStatement(condition, thenBranch, elseBranch);
+        }
 
         private Statement Declaration()
         {
@@ -72,6 +95,10 @@ namespace Core.Core
         }
         private Statement Statement()
         {
+            if (Match(TokenType.WHILE)) return WhileStatement();
+
+            if (Match(TokenType.IF)) return IfStatement();
+
             if (Match(TokenType.PRINT)) return PrintStatement();
 
             if (Match(TokenType.LEFT_BRACE)) return new BlockStatement(Block());
@@ -106,23 +133,48 @@ namespace Core.Core
         #endregion
 
         #region Expression
-
-        private Expression assignment()
+        private Expression And()
         {
-            Expression expr = Equality();
+            Expression expression = Equality();
+            while (Match(TokenType.AND))
+            {
+                Token operatorToken = Previous();
+                Expression right = Equality();
+                expression = new Logical(expression, operatorToken, right);
+            }
+            return expression;
+        }
+
+        private Expression Or()
+        {
+            Expression expression = And();
+            while (Match(TokenType.OR))
+            {
+                Token operatorToken = Previous();
+                Expression right = And();
+                expression = new Logical(expression, operatorToken, right);
+            }
+            return expression;
+        }
+
+        private Expression Assignment()
+        {
+            Expression expr = Or();
+
+            //Expression expr = Equality(); // change after adding if else statement
             if (Match(TokenType.EQUAL))
             {
                 Token equals = Previous();
-                Expression value = assignment();
+                Expression value = Assignment();
                 if (expr is Variable) {
-                    Token name = ((Variable)expr).name;
+                    Token name = ((Variable)expr).Name;
                     return new Assign(name, value);
                 }
                 //error(equals, "Invalid assignment target.");
             }
             return expr;
         }
-        private Expression Expression() => Equality();
+        private Expression Expression() => Assignment();
 
         private Expression Equality()
         {

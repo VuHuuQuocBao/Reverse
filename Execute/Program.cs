@@ -17,17 +17,20 @@ var path1 = @"D:\LastDance\Reverse\Core\Core";
 
 generator.DefineAst(path1, "Expression", new List<string>()
 {
-     "Binary   : Expression left, Token @operator, Expression right",
-     "Grouping : Expression expression",
-     "Literal  : Object value",
-     "Unary    : Token @operator, Expression right",
-     "Variable : Token name",
-     "Assign   : Token name, Expression value",
+     "Binary   : Expression Left, Token @Operator, Expression Right",
+     "Grouping : Expression Expression",
+     "Literal  : Object Value",
+     "Unary    : Token @Operator, Expression Right",
+     "Variable : Token Name",
+     "Assign   : Token Name, Expression Value",
+      "Logical  : Expression Left, Token @Operator, Expression Right",
 });
 
 generator.DefineAst(path1, "Statement", new List<string>()
 {
-      "BlockStatement      : List<Statement> statements"
+      "BlockStatement      : List<Statement> Statements",
+       "IfStatement         : Expression Condition, Statement ThenBranch, Statement ElseBranch",
+       "WhileStatement      : Expression Condition, Statement Body"
 });
 
 #region Test print Ast tree
