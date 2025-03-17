@@ -21,6 +21,7 @@
         public R VisitIfStatement(IfStatement stmt);
         public R VisitWhileStatement(WhileStatement stmt);
         public R VisitFunctionStatement(FunctionStatement stmt);
+        public R VisitReturnStatement(ReturnStatement stmt);
     }
 
 }

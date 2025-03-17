@@ -32,7 +32,8 @@ generator.DefineAst(path1, "Statement", new List<string>()
       "BlockStatement      : List<Statement> Statements",
       "IfStatement         : Expression Condition, Statement ThenBranch, Statement ElseBranch",
       "WhileStatement      : Expression Condition, Statement Body",
-      "FunctionStatement   : Token name, List<Token> params, List<Statement> body",
+      "FunctionStatement   : Token Name, List<Token> @Params, List<Statement> body",
+      "ReturnStatement     : Token Keyword, Expression Value",
 });
 
 #region Test print Ast tree

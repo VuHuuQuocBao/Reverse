@@ -17,9 +17,19 @@ namespace Core.Core.Visitor
         #region Visitor function
 
         #region Visit Statement
+        public object VisitReturnStatement(ReturnStatement stmt)
+        {
+            object value = null;
+            if (stmt.Value != null)
+                value = Evaluate(stmt.Value);
+
+            throw new ReturnException(value);
+        }
+
+
         public object VisitFunctionStatement(FunctionStatement stmt)
         {
-            ReverseCallable function = new ReverseCallable(stmt);
+            ReverseCallable function = new ReverseCallable(stmt, environment);
             environment.Define(stmt.Name._lexeme, function);
             return null;
         }
@@ -162,9 +172,15 @@ namespace Core.Core.Visitor
             Environment previous = this.environment;
 
             this.environment = environment;
-            foreach (Statement statement in statements)
-                Execute(statement);
-            this.environment = previous;
+            try
+            {
+                foreach (Statement statement in statements)
+                    Execute(statement);
+            }
+            finally
+            {
+                this.environment = previous;
+            }
         }
         private Object Evaluate(Expression expr) => expr.Accept(this);
         private void Execute(Statement stmt) => stmt.Accept(this);

@@ -92,4 +92,16 @@ namespace Core.Core
         public readonly List<Statement> Body;
         public override T Accept<T>(IStatementVisitor<T> visitor) => visitor.VisitFunctionStatement(this);
     }
+    public class ReturnStatement : Statement
+    {
+        public ReturnStatement(Token keyword, Expression value)
+        {
+            this.Keyword = keyword;
+            this.Value = value;
+        }
+
+        public readonly Token Keyword;
+        public readonly Expression Value;
+        public override T Accept<T>(IStatementVisitor<T> visitor) => visitor.VisitReturnStatement(this);
+    }
 }

@@ -6,17 +6,28 @@ namespace Core.Function
     public class ReverseCallable : IReverseCallable
     {
         private readonly Core.FunctionStatement _declaration;
-        public ReverseCallable(Core.FunctionStatement declaration)
+        private readonly Core.Environment _closure;
+        public ReverseCallable(Core.FunctionStatement declaration, Core.Environment closure)
         {
+            this._closure = closure;
             this._declaration = declaration;
         }
         public int Arity() => _declaration.Params.Count;
         public object Call(Interpreter interpreter, List<object> arguments)
         {
-            Core.Environment environment = new Core.Environment();
+            var environment = new Core.Environment(_closure);
             for (int i = 0; i < _declaration.@Params.Count; i++)
                 environment.Define(_declaration.@Params[i]._lexeme, arguments[i]);
-            interpreter.ExecuteBlock(_declaration.Body, environment);
+
+            try
+            {
+                interpreter.ExecuteBlock(_declaration.Body, environment);
+            }
+            catch (ReturnException ex)
+            {
+                return ex.value;
+            }
+
             return null;
         }
     }

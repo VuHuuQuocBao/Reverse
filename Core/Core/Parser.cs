@@ -53,6 +53,18 @@ namespace Core.Core
         #region Visitor Function
 
         #region Statement
+        private Statement ReturnStatement()
+        {
+            Token keyword = Previous();
+            Expression value = null;
+
+            if (!Check(TokenType.SEMICOLON))
+                value = Expression();
+
+            Consume(TokenType.SEMICOLON, "Expect ';' after return value.");
+            return new ReturnStatement(keyword, value);
+        }
+
         private FunctionStatement Function(string kind)
         {
             Token name = Consume(TokenType.IDENTIFIER, "Expect " + kind + " name.");
@@ -67,8 +79,8 @@ namespace Core.Core
                     parameters.Add(
                     Consume(TokenType.IDENTIFIER, "Expect parameter name."));
                 }
-            while (Match(TokenType.COMMA)) ;
-        }
+                while (Match(TokenType.COMMA));
+            }
             Consume(TokenType.RIGHT_PAREN, "Expect ')' after parameters.");
 
             Consume(TokenType.LEFT_BRACE, "Expect '{' before " + kind + " body.");
@@ -119,6 +131,8 @@ namespace Core.Core
         }
         private Statement Statement()
         {
+            if (Match(TokenType.RETURN)) return ReturnStatement();
+
             if (Match(TokenType.WHILE)) return WhileStatement();
 
             if (Match(TokenType.IF)) return IfStatement();
@@ -220,7 +234,8 @@ namespace Core.Core
             {
                 Token equals = Previous();
                 Expression value = Assignment();
-                if (expr is Variable) {
+                if (expr is Variable)
+                {
                     Token name = ((Variable)expr).Name;
                     return new Assign(name, value);
                 }
