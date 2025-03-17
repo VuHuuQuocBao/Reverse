@@ -104,4 +104,16 @@ namespace Core.Core
         public readonly Expression Value;
         public override T Accept<T>(IStatementVisitor<T> visitor) => visitor.VisitReturnStatement(this);
     }
+    public class Class : Statement
+    {
+        public Class(Token Name, List<FunctionStatement> Methods)
+        {
+            this.Name = Name;
+            this.Methods = Methods;
+        }
+
+        public readonly Token Name;
+        public readonly List<FunctionStatement> Methods;
+        public override T Accept<T>(IStatementVisitor<T> visitor) => visitor.VisitClassStatement(this);
+    }
 }

@@ -22,6 +22,7 @@
         public R VisitWhileStatement(WhileStatement stmt);
         public R VisitFunctionStatement(FunctionStatement stmt);
         public R VisitReturnStatement(ReturnStatement stmt);
+        public R VisitClassStatement(Class stmt);
     }
 
 }

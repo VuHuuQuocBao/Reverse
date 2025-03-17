@@ -1,5 +1,6 @@
 ﻿using Compiler.Enums;
 using System;
+using System.Security.Claims;
 
 namespace Core.Core
 {
@@ -53,6 +54,22 @@ namespace Core.Core
         #region Visitor Function
 
         #region Statement
+
+        private Statement ClassDeclaration()
+        {
+            Token name = Consume(TokenType.IDENTIFIER, "Expect class name.");
+            Consume(TokenType.LEFT_BRACE, "Expect '{' before class body.");
+            List<FunctionStatement> methods = new List<FunctionStatement>();
+
+            while (!Check(TokenType.RIGHT_BRACE) && !IsAtEnd())
+            {
+                methods.Add(Function("method"));
+            }
+
+            Consume(TokenType.RIGHT_BRACE, "Expect '}' after class body.");
+            return new Class(name, methods);
+        }
+
         private Statement ReturnStatement()
         {
             Token keyword = Previous();
@@ -113,6 +130,7 @@ namespace Core.Core
 
         private Statement Declaration()
         {
+            if (Match(TokenType.CLASS)) return ClassDeclaration();
             if (Match(TokenType.FUN)) return Function("function");
             if (Match(TokenType.VAR)) return VarDeclaration();
             return Statement();

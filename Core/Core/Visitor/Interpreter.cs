@@ -1,4 +1,5 @@
 ﻿using Compiler.Enums;
+using Core.Class;
 using Core.Function;
 
 namespace Core.Core.Visitor
@@ -17,6 +18,15 @@ namespace Core.Core.Visitor
         #region Visitor function
 
         #region Visit Statement
+        public object VisitClassStatement(Class stmt)
+        {
+            environment.Define(stmt.Name._lexeme, null);
+            ReverseClass klass = new ReverseClass(stmt.Name._lexeme);
+            environment.Assign(stmt.Name, klass);
+            return null;
+        }
+
+
         public object VisitReturnStatement(ReturnStatement stmt)
         {
             object value = null;
