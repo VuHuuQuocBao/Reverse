@@ -9,6 +9,7 @@
         public R VisitVariableExp(Variable exp);
         public R VisitAssignExpr(Assign exp);
         public R VisitLogicalExpression(Logical exp);
+        public R VisitCallExpression(Call exp);
     }
 
     public interface IStatementVisitor<R>
@@ -19,6 +20,7 @@
         public R VisitBlockStatement(BlockStatement stmt);
         public R VisitIfStatement(IfStatement stmt);
         public R VisitWhileStatement(WhileStatement stmt);
+        public R VisitFunctionStatement(FunctionStatement stmt);
     }
 
 }

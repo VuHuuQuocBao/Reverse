@@ -23,14 +23,16 @@ generator.DefineAst(path1, "Expression", new List<string>()
      "Unary    : Token @Operator, Expression Right",
      "Variable : Token Name",
      "Assign   : Token Name, Expression Value",
-      "Logical  : Expression Left, Token @Operator, Expression Right",
+     "Logical  : Expression Left, Token @Operator, Expression Right",
+     "Call     : Expression callee, Token paren, List<Expression> arguments"
 });
 
 generator.DefineAst(path1, "Statement", new List<string>()
 {
       "BlockStatement      : List<Statement> Statements",
-       "IfStatement         : Expression Condition, Statement ThenBranch, Statement ElseBranch",
-       "WhileStatement      : Expression Condition, Statement Body"
+      "IfStatement         : Expression Condition, Statement ThenBranch, Statement ElseBranch",
+      "WhileStatement      : Expression Condition, Statement Body",
+      "FunctionStatement   : Token name, List<Token> params, List<Statement> body",
 });
 
 #region Test print Ast tree

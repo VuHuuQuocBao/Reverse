@@ -1,4 +1,5 @@
 ﻿using Compiler.Enums;
+using Core.Function;
 
 namespace Core.Core.Visitor
 {
@@ -16,6 +17,13 @@ namespace Core.Core.Visitor
         #region Visitor function
 
         #region Visit Statement
+        public object VisitFunctionStatement(FunctionStatement stmt)
+        {
+            ReverseCallable function = new ReverseCallable(stmt);
+            environment.Define(stmt.Name._lexeme, function);
+            return null;
+        }
+
         public object VisitWhileStatement(WhileStatement statement)
         {
             while (IsTruthy(Evaluate(statement.Condition)))
@@ -65,6 +73,26 @@ namespace Core.Core.Visitor
         #endregion
 
         #region Visit Expression
+        public object VisitCallExpression(Call expr)
+        {
+            object callee = Evaluate(expr.Callee);
+            List<object> arguments = new List<object>();
+            foreach (var argument in expr.Arguments)
+                arguments.Add(Evaluate(argument));
+
+            if (callee is not IReverseCallable)
+                throw new Exception(
+                "Can only call functions and classes.");
+
+            var function = (IReverseCallable)callee;
+
+            if (arguments.Count != function.Arity())
+                throw new Exception("Arguments count not match");
+
+            return function.Call(this, arguments);
+        }
+
+
         public object VisitLogicalExpression(Logical expression)
         {
             object left = Evaluate(expression.Left);
@@ -129,7 +157,7 @@ namespace Core.Core.Visitor
         #endregion
 
         #region Helper method
-        private void ExecuteBlock(List<Statement> statements, Environment environment)
+        public void ExecuteBlock(List<Statement> statements, Environment environment)
         {
             Environment previous = this.environment;
 

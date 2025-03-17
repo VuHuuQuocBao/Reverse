@@ -78,4 +78,18 @@ namespace Core.Core
         public readonly Statement Body;
         public override T Accept<T>(IStatementVisitor<T> visitor) => visitor.VisitWhileStatement(this);
     }
+    public class FunctionStatement : Statement
+    {
+        public FunctionStatement(Token name, List<Token> @params, List<Statement> body)
+        {
+            this.Name = name;
+            this.@Params = @params;
+            this.Body = body;
+        }
+
+        public readonly Token Name;
+        public readonly List<Token> @Params;
+        public readonly List<Statement> Body;
+        public override T Accept<T>(IStatementVisitor<T> visitor) => visitor.VisitFunctionStatement(this);
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using Compiler.Enums;
+using System;
 
 namespace Core.Core
 {
@@ -52,6 +53,28 @@ namespace Core.Core
         #region Visitor Function
 
         #region Statement
+        private FunctionStatement Function(string kind)
+        {
+            Token name = Consume(TokenType.IDENTIFIER, "Expect " + kind + " name.");
+            Consume(TokenType.LEFT_PAREN, "Expect '(' after " + kind + " name.");
+            List<Token> parameters = new();
+            if (!Check(TokenType.RIGHT_PAREN))
+            {
+                do
+                {
+                    if (parameters.Count >= 255)
+                        throw new Exception("Can't have more than 255 parameters.");
+                    parameters.Add(
+                    Consume(TokenType.IDENTIFIER, "Expect parameter name."));
+                }
+            while (Match(TokenType.COMMA)) ;
+        }
+            Consume(TokenType.RIGHT_PAREN, "Expect ')' after parameters.");
+
+            Consume(TokenType.LEFT_BRACE, "Expect '{' before " + kind + " body.");
+            List<Statement> body = Block();
+            return new FunctionStatement(name, parameters, body);
+        }
         private Statement WhileStatement()
         {
             Consume(TokenType.LEFT_PAREN, "Expect '(' after 'while'.");
@@ -78,6 +101,7 @@ namespace Core.Core
 
         private Statement Declaration()
         {
+            if (Match(TokenType.FUN)) return Function("function");
             if (Match(TokenType.VAR)) return VarDeclaration();
             return Statement();
         }
@@ -133,6 +157,38 @@ namespace Core.Core
         #endregion
 
         #region Expression
+        private Expression Call()
+        {
+            Expression expr = Primary();
+            while (true)
+            {
+                if (Match(TokenType.LEFT_PAREN))
+                {
+                    expr = FinishCall(expr);
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return expr;
+        }
+        private Expression FinishCall(Expression callee)
+        {
+            List<Expression> arguments = new List<Expression>();
+            if (!Check(TokenType.RIGHT_PAREN))
+            {
+                do
+                {
+                    arguments.Add(Expression());
+                }
+                while (Match(TokenType.COMMA));
+            }
+
+            Token paren = Consume(TokenType.RIGHT_PAREN, "Expect ')' after arguments.");
+            return new Call(callee, paren, arguments);
+        }
         private Expression And()
         {
             Expression expression = Equality();
@@ -144,7 +200,6 @@ namespace Core.Core
             }
             return expression;
         }
-
         private Expression Or()
         {
             Expression expression = And();
@@ -156,7 +211,6 @@ namespace Core.Core
             }
             return expression;
         }
-
         private Expression Assignment()
         {
             Expression expr = Or();
@@ -175,7 +229,6 @@ namespace Core.Core
             return expr;
         }
         private Expression Expression() => Assignment();
-
         private Expression Equality()
         {
             Expression exp = Comparison();
@@ -187,7 +240,6 @@ namespace Core.Core
             }
             return exp;
         }
-
         private Expression Comparison()
         {
             Expression expr = Term();
@@ -199,7 +251,6 @@ namespace Core.Core
             }
             return expr;
         }
-
         private Expression Term()
         {
             Expression expr = Factor();
@@ -211,7 +262,6 @@ namespace Core.Core
             }
             return expr;
         }
-
         private Expression Factor()
         {
             Expression expr = Unary();
@@ -223,7 +273,6 @@ namespace Core.Core
             }
             return expr;
         }
-
         private Expression Unary()
         {
             if (Match(TokenType.BANG, TokenType.MINUS))
@@ -232,9 +281,8 @@ namespace Core.Core
                 Expression right = Unary();
                 return new Unary(@operator, right);
             }
-            return Primary();
+            return Call();
         }
-
         private Expression Primary()
         {
             if (Match(TokenType.FALSE)) return new Literal(false);
@@ -262,7 +310,6 @@ namespace Core.Core
         #endregion
 
         public Expression Parse() => Expression();
-
         public List<Statement> ParseStatement()
         {
             var statements = new List<Statement>();

@@ -93,4 +93,18 @@ namespace Core.Core
         public readonly Expression Right;
         public override T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitLogicalExpression(this);
     }
+    public class Call : Expression
+    {
+        public Call(Expression callee, Token paren, List<Expression> arguments)
+        {
+            this.Callee = callee;
+            this.Paren = paren;
+            this.Arguments = arguments;
+        }
+
+        public readonly Expression Callee;
+        public readonly Token Paren;
+        public readonly List<Expression> Arguments;
+        public override T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitCallExpression(this);
+    }
 }

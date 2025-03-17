@@ -32,5 +32,6 @@ namespace Core.Core.Visitor
         public string VisitVariableExp(Variable exp) => throw new NotImplementedException();
         public string VisitAssignExpr(Assign exp) => throw new NotImplementedException();
         public string VisitLogicalExpression(Logical exp) => throw new NotImplementedException();
+        public string VisitCallExpression(Call exp) => throw new NotImplementedException();
     }
 }
