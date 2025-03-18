@@ -10,6 +10,9 @@
         public R VisitAssignExpr(Assign exp);
         public R VisitLogicalExpression(Logical exp);
         public R VisitCallExpression(Call exp);
+        public R VisitGetExpression(Get exp);
+        public R VisitSetExpression(Set exp);
+
     }
 
     public interface IStatementVisitor<R>

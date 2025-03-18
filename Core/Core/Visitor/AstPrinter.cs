@@ -33,5 +33,7 @@ namespace Core.Core.Visitor
         public string VisitAssignExpr(Assign exp) => throw new NotImplementedException();
         public string VisitLogicalExpression(Logical exp) => throw new NotImplementedException();
         public string VisitCallExpression(Call exp) => throw new NotImplementedException();
+        public string VisitGetExpression(Get exp) => throw new NotImplementedException();
+        public string VisitSetExpression(Set exp) => throw new NotImplementedException();
     }
 }

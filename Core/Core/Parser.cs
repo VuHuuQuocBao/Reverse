@@ -1,6 +1,4 @@
 ﻿using Compiler.Enums;
-using System;
-using System.Security.Claims;
 
 namespace Core.Core
 {
@@ -195,13 +193,15 @@ namespace Core.Core
             while (true)
             {
                 if (Match(TokenType.LEFT_PAREN))
-                {
                     expr = FinishCall(expr);
+                else if (Match(TokenType.DOT))
+                {
+                    Token name = Consume(TokenType.IDENTIFIER,
+                    "Expect property name after '.'.");
+                    expr = new Get(expr, name);
                 }
                 else
-                {
                     break;
-                }
             }
 
             return expr;
@@ -257,6 +257,12 @@ namespace Core.Core
                     Token name = ((Variable)expr).Name;
                     return new Assign(name, value);
                 }
+                else if (expr is Get)
+                {
+                    Get get = (Get)expr;
+                    return new Set(get.Object, get.Name, value);
+                }
+
                 //error(equals, "Invalid assignment target.");
             }
             return expr;

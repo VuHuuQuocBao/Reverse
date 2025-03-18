@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace Core.Core
+﻿namespace Core.Core
 {
     public class Environment
     {

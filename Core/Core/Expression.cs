@@ -107,4 +107,30 @@ namespace Core.Core
         public readonly List<Expression> Arguments;
         public override T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitCallExpression(this);
     }
+    public class Get : Expression
+    {
+        public Get(Expression Object, Token Name)
+        {
+            this.Object = Object;
+            this.Name = Name;
+        }
+
+        public readonly Expression Object;
+        public readonly Token Name;
+        public override T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitGetExpression(this);
+    }
+    public class Set : Expression
+    {
+        public Set(Expression Object, Token Name, Expression Value)
+        {
+            this.Object = Object;
+            this.Name = Name;
+            this.Value = Value;
+        }
+
+        public readonly Expression Object;
+        public readonly Token Name;
+        public readonly Expression Value;
+        public override T Accept<T>(IExpressionVisitor<T> visitor) => visitor.VisitSetExpression(this);
+    }
 }

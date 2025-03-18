@@ -93,6 +93,27 @@ namespace Core.Core.Visitor
         #endregion
 
         #region Visit Expression
+        public object VisitSetExpression(Set expr)
+        {
+            object obj = Evaluate(expr.Object);
+            if (!(obj is ReverseInstance))
+            {
+                throw new Exception("Only instances have fields.");
+            }
+            object value = Evaluate(expr.Value);
+            ((ReverseInstance)obj).set(expr.Name, value);
+            return value;
+        }
+
+        public object VisitGetExpression(Get expr)
+        {
+            object obj = Evaluate(expr.Object);
+            if (obj is ReverseInstance)
+                return ((ReverseInstance)obj).Get(expr.Name);
+
+            throw new Exception("Only instances have properties.");
+        }
+
         public object VisitCallExpression(Call expr)
         {
             object callee = Evaluate(expr.Callee);

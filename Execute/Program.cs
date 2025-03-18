@@ -22,7 +22,9 @@ generator.DefineAst(path1, "Expression", new List<string>()
      "Variable : Token Name",
      "Assign   : Token Name, Expression Value",
      "Logical  : Expression Left, Token @Operator, Expression Right",
-     "Call     : Expression callee, Token paren, List<Expression> arguments"
+     "Call     : Expression Callee, Token @Paren, List<Expression> Arguments",
+     "Get      : Expression Object, Token Name",
+     "Set      : Expression Object, Token Name, Expression Value",
 });
 
 generator.DefineAst(path1, "Statement", new List<string>()
