@@ -21,7 +21,15 @@ namespace Core.Core.Visitor
         public object VisitClassStatement(Class stmt)
         {
             environment.Define(stmt.Name._lexeme, null);
-            ReverseClass klass = new ReverseClass(stmt.Name._lexeme);
+
+            Dictionary<string, ReverseCallable> methods = new Dictionary<string, ReverseCallable>();
+            foreach (FunctionStatement method in stmt.Methods)
+            {
+                ReverseCallable function = new ReverseCallable(method, environment);
+                methods[method.Name._lexeme] = function;
+            }
+
+            ReverseClass klass = new ReverseClass(stmt.Name._lexeme, methods);
             environment.Assign(stmt.Name, klass);
             return null;
         }
