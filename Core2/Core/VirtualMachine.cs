@@ -46,6 +46,8 @@ namespace Core2.Core
                             Console.WriteLine();
                             return InterpretResult.INTERPRET_OK;
                         }
+                    case (byte)OpCode.OP_NEGATE:
+                        Push(-Pop()); break;
                     default:
                         break;
                 }

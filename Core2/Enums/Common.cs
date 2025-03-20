@@ -4,5 +4,6 @@
     {
         OP_CONSTANT,
         OP_RETURN,
+        OP_NEGATE,
     }
 }

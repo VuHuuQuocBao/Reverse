@@ -32,6 +32,8 @@ namespace Core2.Utils
                     return SimpleInstruction("OP_RETURN", offset);
                 case (byte)OpCode.OP_CONSTANT:
                     return ConstantInstruction("OP_CONSTANT", chunk, offset);
+                case (byte)OpCode.OP_NEGATE:
+                    return SimpleInstruction("OP_NEGATE", offset);
                 default:
                     Console.WriteLine($"Unknown opcode {instruction}");
                     return offset + 1;

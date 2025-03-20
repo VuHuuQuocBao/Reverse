@@ -6,13 +6,19 @@ using Core2.Enums;
 using Core2.Utils;
 
 Chunk chunk = new();
-
+/*
 for (int i = 0; i < 4; i++)
 {
     var offset = chunk.AddConstant(i);
     chunk.WriteChunk((byte)OpCode.OP_CONSTANT, 123);
     chunk.WriteChunk((byte)offset, 123);
-}
+    chunk.WriteChunk((byte)OpCode.OP_NEGATE, 123);
+}*/
+
+chunk.WriteChunk((byte)OpCode.OP_CONSTANT, 123);
+var offset = chunk.AddConstant(24);
+chunk.WriteChunk((byte)offset, 123);
+chunk.WriteChunk((byte)OpCode.OP_NEGATE, 123);
 
 chunk.WriteChunk((byte)OpCode.OP_RETURN, 123);
 
