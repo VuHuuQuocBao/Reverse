@@ -18,6 +18,12 @@ chunk.WriteChunk((byte)OpCode.OP_RETURN, 123);
 
 ChunkUtils.DisassembleChunk(chunk, "test chunk");
 
+var vm = new VM();
+vm.Chunk = chunk;
+var result = vm.Interpret();
+
+
+
 MemoryUtils.FreeChunk(chunk);
 
 var G = 1;
