@@ -48,6 +48,12 @@ namespace Core2.Core
                         }
                     case (byte)OpCode.OP_NEGATE:
                         Push(-Pop()); break;
+                    case (byte)OpCode.OP_ADD:
+                        BinaryOp((a, b) => a + b); break;
+                    case (byte)OpCode.OP_SUBTRACT: BinaryOp((a, b) => a - b); break;
+                    case (byte)OpCode.OP_MULTIPLY: BinaryOp((a, b) => a * b); break;
+                    case (byte)OpCode.OP_DIVIDE:
+                        BinaryOp((a, b) => a / b); break;
                     default:
                         break;
                 }
@@ -67,7 +73,12 @@ namespace Core2.Core
             this.StackTop--;
             return this.Stack[this.StackTop];
         }
-
+        private void BinaryOp(Func<double, double, double> op)
+        {
+            double b = Pop(); 
+            double a = Pop();
+            Push(op(a, b)); 
+        }
     }
 
 }

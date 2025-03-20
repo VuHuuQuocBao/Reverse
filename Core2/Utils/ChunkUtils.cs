@@ -34,6 +34,14 @@ namespace Core2.Utils
                     return ConstantInstruction("OP_CONSTANT", chunk, offset);
                 case (byte)OpCode.OP_NEGATE:
                     return SimpleInstruction("OP_NEGATE", offset);
+                case (byte)OpCode.OP_ADD:
+                    return SimpleInstruction("OP_ADD", offset);
+                case (byte)OpCode.OP_SUBTRACT:
+                    return SimpleInstruction("OP_SUBTRACT", offset);
+                case (byte)OpCode.OP_MULTIPLY:
+                    return SimpleInstruction("OP_MULTIPLY", offset);
+                case (byte)OpCode.OP_DIVIDE:
+                    return SimpleInstruction("OP_DIVIDE", offset);
                 default:
                     Console.WriteLine($"Unknown opcode {instruction}");
                     return offset + 1;
