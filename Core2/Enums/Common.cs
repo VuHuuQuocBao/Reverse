@@ -2,7 +2,7 @@
 {
     public enum OpCode
     {
-        OP_RETURN
+        OP_CONSTANT,
+        OP_RETURN,
     }
-
 }

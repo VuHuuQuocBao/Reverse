@@ -7,6 +7,9 @@ using Core2.Utils;
 
 Chunk chunk = new();
 
+var constant = chunk.AddConstant(34);
+chunk.WriteChunk((byte)OpCode.OP_CONSTANT);
+chunk.WriteChunk((byte)constant);
 chunk.WriteChunk((byte)OpCode.OP_RETURN);
 
 ChunkUtils.DisassembleChunk(chunk, "test chunk");
