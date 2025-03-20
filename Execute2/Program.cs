@@ -7,10 +7,14 @@ using Core2.Utils;
 
 Chunk chunk = new();
 
-var constant = chunk.AddConstant(34);
-chunk.WriteChunk((byte)OpCode.OP_CONSTANT);
-chunk.WriteChunk((byte)constant);
-chunk.WriteChunk((byte)OpCode.OP_RETURN);
+for (int i = 0; i < 4; i++)
+{
+    var offset = chunk.AddConstant(i);
+    chunk.WriteChunk((byte)OpCode.OP_CONSTANT, 123);
+    chunk.WriteChunk((byte)offset, 123);
+}
+
+chunk.WriteChunk((byte)OpCode.OP_RETURN, 123);
 
 ChunkUtils.DisassembleChunk(chunk, "test chunk");
 

@@ -43,6 +43,8 @@ namespace Core2.Utils
             chunk.Capacity = 0;
             chunk.Code = new byte[0];
         }
+
+        // TODO: free array 
     }
 
 }

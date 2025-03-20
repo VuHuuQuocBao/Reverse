@@ -22,6 +22,13 @@ namespace Core2.Utils
         public static int DisassembleInstruction(Chunk chunk, int offset)
         {
             Console.Write($"{offset:D4} ");
+
+            if (offset > 0 && chunk.Lines[offset] == chunk.Lines[offset - 1])
+                Console.Write("   | ");
+            else
+                Console.Write($"{chunk.Lines[offset],4} ");
+
+
             byte instruction = chunk.Code[offset];
 
             switch (instruction)

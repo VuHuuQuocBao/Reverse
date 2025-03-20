@@ -12,6 +12,7 @@ namespace Core2.Core
         public int Count { get; set; } = 0;
         public int Capacity { get; set; } = 0;
         public byte[] Code { get; set; } = null;
+        public int[] Lines { get; set; }
         public ValueArray Constants { get; set; } = new();
         public Chunk() { }
         public Chunk(int count, int capacity, byte[] code)
@@ -21,18 +22,22 @@ namespace Core2.Core
             Code = code;
         }
 
-        public void WriteChunk(byte newByte)
+        public void WriteChunk(byte newByte, int Line)
         {
             if (this.Capacity < this.Count + 1)
             {
                 int oldCapacity = this.Capacity;
                 this.Capacity = GrowCapacity(oldCapacity);
+
                 this.Code = GrowArray(this.Code, oldCapacity, this.Capacity);
+                this.Lines = GrowArray(this.Lines, oldCapacity, this.Capacity);
+
                 var newCode = new byte[this.Capacity];
                 Array.Copy(this.Code, newCode, oldCapacity);
                 this.Code = newCode;
             }
             this.Code[this.Count] = newByte;
+            this.Lines[this.Count] = Line;
             this.Count++;
         }
         public int AddConstant(Value value)
